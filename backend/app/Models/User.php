@@ -63,6 +63,6 @@ class User extends Authenticatable
      */
     public function hasMemberProfile(): bool
     {
-        return $this->memberProfile !== null;
+        return $this->relationLoaded('memberProfile') && $this->memberProfile !== null;
     }
 }

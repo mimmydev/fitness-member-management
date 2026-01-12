@@ -13,7 +13,8 @@ return [
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    // Restrict to only necessary HTTP methods (no wildcards)
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 
     'allowed_origins' => [
         env('FRONTEND_URL', 'http://localhost:5173'),
@@ -21,7 +22,8 @@ return [
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    // Restrict to only necessary headers (no wildcards)
+    'allowed_headers' => ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-CSRF-TOKEN'],
 
     'exposed_headers' => [],
 

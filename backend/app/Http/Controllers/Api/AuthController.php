@@ -85,4 +85,22 @@ class AuthController extends Controller
             'user' => new UserResource($user),
         ]);
     }
+
+    /**
+     * Logout from all devices (revoke all tokens).
+     *
+     * Useful if user's device is compromised or they want to
+     * forcefully log out from all sessions.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logoutAllDevices(Request $request): JsonResponse
+    {
+        $this->authService->logoutAllDevices($request->user());
+
+        return response()->json([
+            'message' => 'Successfully logged out from all devices.',
+        ]);
+    }
 }
