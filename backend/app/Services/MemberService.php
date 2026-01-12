@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\MemberProfile;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -17,33 +18,62 @@ use Illuminate\Support\Facades\DB;
 class MemberService
 {
     /**
-     * Get all member profiles with user data.
+     * Get all member profiles with user data (paginated).
      *
      * Eager loads user relationship to prevent N+1 queries.
      * Returns only non-deleted members (soft deletes).
      *
-     * @return Collection<MemberProfile>
+     * @param int $perPage Number of members per page (default: 15)
+     * @param string|null $search Optional search term (searches name, email, membership type)
+     * @return LengthAwarePaginator
      */
-    public function getAllMembers(): Collection
+    public function getAllMembers(int $perPage = 15, ?string $search = null): LengthAwarePaginator
     {
-        return MemberProfile::with('user')
-            ->orderBy('last_name')
+        $query = MemberProfile::with('user');
+
+        // Apply search filter if provided
+        if ($search && strlen($search) >= 2) {
+            $searchTerm = strtolower($search);
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereRaw('LOWER(CONCAT(first_name, " ", last_name)) LIKE ?', ["%{$searchTerm}%"])
+                  ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                      $userQuery->whereRaw('LOWER(email) LIKE ?', ["%{$searchTerm}%"]);
+                  })
+                  ->orWhereRaw('LOWER(membership_type) LIKE ?', ["%{$searchTerm}%"]);
+            });
+        }
+
+        return $query->orderBy('last_name')
             ->orderBy('first_name')
-            ->get();
+            ->paginate($perPage);
     }
 
     /**
-     * Get active members only.
+     * Get active members only (paginated).
      *
-     * @return Collection<MemberProfile>
+     * @param int $perPage Number of members per page (default: 15)
+     * @param string|null $search Optional search term (searches name, email, membership type)
+     * @return LengthAwarePaginator
      */
-    public function getActiveMembers(): Collection
+    public function getActiveMembers(int $perPage = 15, ?string $search = null): LengthAwarePaginator
     {
-        return MemberProfile::with('user')
-            ->active()
-            ->orderBy('last_name')
+        $query = MemberProfile::with('user')->active();
+
+        // Apply search filter if provided
+        if ($search && strlen($search) >= 2) {
+            $searchTerm = strtolower($search);
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereRaw('LOWER(CONCAT(first_name, " ", last_name)) LIKE ?', ["%{$searchTerm}%"])
+                  ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                      $userQuery->whereRaw('LOWER(email) LIKE ?', ["%{$searchTerm}%"]);
+                  })
+                  ->orWhereRaw('LOWER(membership_type) LIKE ?', ["%{$searchTerm}%"]);
+            });
+        }
+
+        return $query->orderBy('last_name')
             ->orderBy('first_name')
-            ->get();
+            ->paginate($perPage);
     }
 
     /**
