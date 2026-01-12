@@ -1,35 +1,63 @@
-@import './base.css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Light Mode Colors - OKLCH format */
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(10% 0.01 240);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(10% 0.01 240);
+  --color-popover: oklch(100% 0 0);
+  --color-popover-foreground: oklch(10% 0.01 240);
+  --color-primary: oklch(10% 0.01 240);
+  --color-primary-foreground: oklch(98% 0 0);
+  --color-secondary: oklch(96% 0.001 240);
+  --color-secondary-foreground: oklch(10% 0.01 240);
+  --color-muted: oklch(96% 0.001 240);
+  --color-muted-foreground: oklch(47% 0.01 240);
+  --color-accent: oklch(96% 0.001 240);
+  --color-accent-foreground: oklch(10% 0.01 240);
+  --color-destructive: oklch(60% 0.15 25);
+  --color-destructive-foreground: oklch(98% 0 0);
+  --color-border: oklch(91% 0.01 240);
+  --color-input: oklch(91% 0.01 240);
+  --color-ring: oklch(10% 0.01 240);
+  
+  /* Border Radius */
+  --radius: 0.625rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+.dark {
+  /* Dark Mode Colors - OKLCH format */
+  --color-background: oklch(10% 0.01 240);
+  --color-foreground: oklch(98% 0 0);
+  --color-card: oklch(10% 0.01 240);
+  --color-card-foreground: oklch(98% 0 0);
+  --color-popover: oklch(10% 0.01 240);
+  --color-popover-foreground: oklch(98% 0 0);
+  --color-primary: oklch(98% 0 0);
+  --color-primary-foreground: oklch(10% 0.01 240);
+  --color-secondary: oklch(17% 0.01 240);
+  --color-secondary-foreground: oklch(98% 0 0);
+  --color-muted: oklch(17% 0.01 240);
+  --color-muted-foreground: oklch(65% 0.01 240);
+  --color-accent: oklch(17% 0.01 240);
+  --color-accent-foreground: oklch(98% 0 0);
+  --color-destructive: oklch(30% 0.15 25);
+  --color-destructive-foreground: oklch(98% 0 0);
+  --color-border: oklch(17% 0.01 240);
+  --color-input: oklch(17% 0.01 240);
+  --color-ring: oklch(84% 0.01 240);
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
+@layer base {
   body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    @apply bg-background text-foreground;
   }
 }
