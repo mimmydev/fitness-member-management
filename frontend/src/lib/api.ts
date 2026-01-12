@@ -5,7 +5,8 @@
  * Includes request/response interceptors for token management and error handling.
  */
 
-import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios'
+import axios, { AxiosError } from 'axios'
+import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 
 export interface ApiError {
   message: string
